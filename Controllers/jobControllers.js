@@ -84,11 +84,10 @@ export const showStats = async (req, res) => {
     total[title] = count;
     return total;
   }, {});
-  console.log(stats);
   const defaultStats = {
     pending: stats.Pending || 0,
     interview: stats.Interview || 0,
-    declined: stats.Declined || 0,
+    decline: stats.Decline || 0,
   };
 
   let monthlyApplications = await Job.aggregate([
@@ -116,20 +115,5 @@ export const showStats = async (req, res) => {
       return { date, count };
     })
     .reverse();
-
-  // let monthlyApplications = [
-  //   {
-  //     date: "May 23",
-  //     count: 12,
-  //   },
-  //   {
-  //     date: "Jun 23",
-  //     count: 9,
-  //   },
-  //   {
-  //     date: "Jul 23",
-  //     count: 3,
-  //   },
-  // ];
   res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications });
 };

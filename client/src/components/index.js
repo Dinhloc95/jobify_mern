@@ -14,3 +14,5 @@ export { default as ChartContainer } from "./ChartContainer";
 export { default as AreaChartComponent } from "./AreaChartComponent";
 export { default as BarChartComponent } from "./BarChartComponent";
 export { default as NumberPageContainer } from "./NumberPageContainer";
+export { default as LoadingComponent } from "./LoadingComponent";
+export { default as ErrorElement } from "./ErrorElement";

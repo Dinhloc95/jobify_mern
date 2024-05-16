@@ -1,24 +1,45 @@
 import React, { createContext, useContext, useState } from "react";
-import { BigSideBar, SmallSideBar, Navbar } from "../components";
+import {
+  BigSideBar,
+  SmallSideBar,
+  Navbar,
+  LoadingComponent,
+} from "../components";
 import Wrapper from "../assets/wrappers/Dashboard";
-import { Outlet, redirect, useLoaderData, useNavigate } from "react-router-dom";
+import {
+  Outlet,
+  redirect,
+  useLoaderData,
+  useNavigate,
+  useNavigation,
+} from "react-router-dom";
 import customFetch from "../../../utils/customFetch";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 const DashboardContext = createContext();
-export const loader = async () => {
+const userQuery = {
+  queryKey: ["user"],
+  queryFn: async () => {
+    const response = await customFetch.get("/users/current-user");
+    return response.data;
+  },
+};
+export const loader = (queryClient) => async () => {
   try {
-    const { data } = await customFetch.get("/users/current-user");
-    return data;
+    return await queryClient.ensureQueryData(userQuery);
   } catch (error) {
     return redirect("/");
   }
 };
 
 const DashboardLayout = ({ isDarkThemeEnable }) => {
-  const { user } = useLoaderData();
+  //const { user } = useLoaderData();
+  const { user } = useQuery(userQuery).data;
   const navigate = useNavigate();
   const [isShowSideBar, setShowSideBar] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(isDarkThemeEnable);
+  const navigation = useNavigation();
+  const isLoading = navigation.state === "loading";
 
   const toggleSideBar = () => {
     setShowSideBar(!isShowSideBar);
@@ -32,6 +53,7 @@ const DashboardLayout = ({ isDarkThemeEnable }) => {
   const logOutUser = async () => {
     navigate("/");
     await customFetch.get("auth/logout");
+    queryClient.invalidateQueries();
     toast.success("Logout Successful");
   };
   return (
@@ -52,7 +74,7 @@ const DashboardLayout = ({ isDarkThemeEnable }) => {
           <div>
             <Navbar />
             <div className="dashboard-page">
-              <Outlet context={{ user }} />
+              {isLoading ? <LoadingComponent /> : <Outlet context={{ user }} />}
             </div>
           </div>
         </main>

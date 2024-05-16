@@ -21,7 +21,7 @@ const StatsContainer = ({ defaultStats }) => {
     },
     {
       title: "jobs declined",
-      count: defaultStats?.declined || 0,
+      count: defaultStats?.decline || 0,
       icon: <FaBug />,
       color: "#d66a6a",
       bcg: "#ffeeee",

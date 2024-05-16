@@ -5,22 +5,26 @@ import { FormRow, SubmitBtn } from "../components";
 import { UseDashboardContext } from "./DashboardLayout";
 import { toast } from "react-toastify";
 import customFetch from "../../../utils/customFetch";
-export const action = async ({ request }) => {
-  const formData = await request.formData();
-  const file = formData.get("avatar");
-  if (file && file.size > 500000) {
-    toast.error("image size is too large");
-    return null;
-  }
-  try {
-    await customFetch.patch("/users/update-user", formData);
-    toast.success("update user Successful");
-    return null;
-  } catch (error) {
-    toast.error(error?.response?.data?.msg);
-    return error;
-  }
-};
+export const action =
+  (queryClient) =>
+  async ({ request }) => {
+    const formData = await request.formData();
+    const file = formData.get("avatar");
+    if (file && file.size > 500000) {
+      toast.error("image size is too large");
+      return null;
+    }
+    try {
+      await customFetch.patch("/users/update-user", formData);
+      queryClient.invalidateQueries(["user"]);
+      toast.success("update user Successful");
+      window.location.reload();
+      return null;
+    } catch (error) {
+      toast.error(error?.response?.data?.msg);
+      return error;
+    }
+  };
 
 const Profile = () => {
   const { user } = UseDashboardContext();
