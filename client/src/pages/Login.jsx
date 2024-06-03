@@ -30,9 +30,9 @@ const Login = () => {
         <FormRow type="email" name="email" labelName="email" />
         <FormRow type="password" name="password" labelName="password" />
         <SubmitBtn formBtn />
-        <button type="button" className="btn btn-block">
+        {/* <button type="button" className="btn btn-block">
           Expore about app
-        </button>
+        </button> */}
         <p>
           not a member yet?
           <Link to="/register" className="member-btn">

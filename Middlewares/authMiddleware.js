@@ -13,7 +13,7 @@ export const authenticateUser = (req, res, next) => {
     req.user = { userId, role };
     next();
   } catch (error) {
-    throw new UnauthenticatedError("authentication invalid 222");
+    throw new UnauthenticatedError("authentication invalid ");
   }
 };
 export const authorizePermission = (...role) => {
